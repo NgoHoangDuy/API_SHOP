@@ -37,9 +37,8 @@ const getUserAndAdminTokens = async (userId) => {
       adminIds.push(admin._id?.toString());
     });
     const uniqueIdUser = uniqueValuesArr([currentUser?._id?.toString(),...adminIds]);
-    console.log('uniqueIdUser',uniqueIdUser)
     const uniqueDeviceToken = uniqueValuesArr([...currentUser?.deviceTokens,...adminDeviceTokens]);
-    console.log('uniqueDeviceToken',uniqueDeviceToken)
+
     return { recipientIds: uniqueIdUser, deviceTokens: uniqueDeviceToken };
   } catch (error) {
     return { recipientIds: [], deviceTokens: [] };

@@ -15,6 +15,7 @@ const {
   getUserAndAdminTokens,
 } = require("./NotificationService");
 const moment = require("moment/moment");
+const User = require("../models/UserModel");
 
 const updateProductStock = async (order) => {
   try {
@@ -70,7 +71,6 @@ const createOrder = (newOrder) => {
       email,
       deliveryMethod,
     } = newOrder;
-    console.log('new order: ', newOrder)
     try {
       const promises = newOrder.orderItems.map(updateProductStock);
       const results = await Promise.all(promises);
@@ -128,7 +128,13 @@ const createOrder = (newOrder) => {
           recipientIds,
           deviceTokens,
         });
-        //await EmailService.sendEmailCreateOrder(email, orderItems);
+        
+        const userData = await User.findById({
+            _id: user,
+          });
+        const email = userData.email
+      
+        await EmailService.sendEmailCreateOrder(email, orderItems);
 
         if (createdOrder) {
           resolve({
@@ -141,7 +147,7 @@ const createOrder = (newOrder) => {
         }
       }
     } catch (e) {
-         console.log('e', e)
+      //   console.log('e', e)
       reject(e);
     }
   });
